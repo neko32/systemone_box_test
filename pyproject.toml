@@ -1,0 +1,57 @@
+[project]
+name = "neko-box"
+version = "0.1.0"
+description = "Locate cats in a video with TypeSafe System One box"
+readme = "README.md"
+authors = [
+    { name = "neko32", email = "neko64@outlook.jp" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "numpy>=2.5.4",
+    "opencv-python>=5.0.0.93",
+    "python-dotenv>=1.2.4",
+    "typesafe-sdk>=0.7.5",
+]
+
+[project.scripts]
+neko-box = "neko_box:main"
+
+[build-system]
+requires = ["uv_build>=0.11.28,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pip-audit>=2.10.1",
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.2",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-m 'not integration'"
+markers = ["integration: hits the real TypeSafe API (needs API_KEY_JEV)"]
+
+[tool.coverage.run]
+source = ["neko_box"]
+omit = ["*/__main__.py"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true
+
+[tool.coverage.html]
+directory = "docs/coverage"
+
+[tool.ruff]
+line-length = 140
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "S", "SIM", "RUF", "PL", "PT", "C4"]
+ignore = ["PLR2004", "RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "PLR2004", "S105", "PLR0913"]

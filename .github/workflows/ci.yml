@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      API_KEY_JEV: ${{ secrets.API_KEY_JEV }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+      - name: OpenCV runtime libraries
+        run: sudo apt-get update && sudo apt-get install -y libgl1 libglib2.0-0
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run pytest --cov --cov-report=term-missing
+      - run: uv run pip-audit --skip-editable
+      - name: Integration tests (only when the API_KEY_JEV secret is configured)
+        if: ${{ env.API_KEY_JEV != '' }}
+        run: uv run pytest -m integration -v

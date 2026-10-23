@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# neko-box outputs
+out/
+
+# Local Claude Code instructions (private)
+CLAUDE.local.md
